@@ -1,7 +1,7 @@
 import React from 'react'
 import { Icon } from '@iconify/react';
 
-const cardTodo = ({todos, setTodos}) => {
+const cardTodo = ({todos, setTodos, setEdit}) => {
   const handleCompleted = (todo) => {
     setTodos(
       todos.map((item) => {
@@ -11,6 +11,11 @@ const cardTodo = ({todos, setTodos}) => {
         return item;
       }),
     );
+  };
+
+  const handleEdit = ({ id }) => {
+    const findTodo = todos.find((todo) => todo.id === id);
+    setEdit(findTodo);
   };
 
   const handleDelete = ({ id }) => {
@@ -23,7 +28,7 @@ const cardTodo = ({todos, setTodos}) => {
       {
         todos.map((todo) => {
           return (
-            <div className="flex flex-col text-left px-5" key={todo.id}>
+            <div key={todo.id} className="flex flex-col text-left px-5">
               <div className="bg-primary text-white rounded-lg p-6 shadow-xl w-full max-w-3xl mx-auto my-2 flex justify-between gap-10">
                 <h5 className={(todo.isCompleted) ? "line-through" : ""}>{(todo.todo) && todo.todo}</h5>
                 <div className="button-container flex gap-2">
@@ -39,6 +44,7 @@ const cardTodo = ({todos, setTodos}) => {
                     width="24" 
                     height="24" 
                     className={(todo.isCompleted) ? "hidden" : "hover:text-yellow-400 cursor-pointer"}
+                    onClick={() => {handleEdit(todo)}}
                   />
                   <Icon 
                     icon="akar-icons:trash-can" 
