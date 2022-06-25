@@ -3,9 +3,13 @@ import CardTodo from './components/cardTodo';
 
 const App = () => {
   const [todo, setTodo] = useState("");
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => {
+    const dataStorage = JSON.parse(localStorage.getItem("todos"))
+    return dataStorage || []
+  });
   const [edit, setEdit] = useState();
-  
+
+
   const updateTodo = (id, editTodo, isCompleted) => {
     const newTodo = todos.map((todo) => (todo.id === id ? {id: id, todo: editTodo, isCompleted: isCompleted} : todo));
     setTodos(newTodo);
@@ -13,12 +17,13 @@ const App = () => {
   };
   
   useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos))    
     if (edit) {
       setTodo(edit.todo);
     } else {
       setTodo("");
     }
-  }, [setTodo, edit]);
+  }, [setTodo, edit, todos]);
   
   const handleSubmit = (e) => {
     if (todo === '') {
@@ -26,7 +31,7 @@ const App = () => {
       e.preventDefault();
       return false;
     }
-
+    
     if (!edit) {
       const newTodo = { id: Math.floor(Math.random() * 100), todo: todo, isCompleted: false }; 
       setTodos([...todos, newTodo]);
@@ -34,6 +39,7 @@ const App = () => {
     } else {
       updateTodo(edit.id, todo, edit.isCompleted);
     }
+    
     
     e.preventDefault();
     e.target.reset();
